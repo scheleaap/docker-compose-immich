@@ -20,7 +20,8 @@ services:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
       - ${UPLOAD_LOCATION}:/data
       - /etc/localtime:/etc/localtime:ro
-      - /media/D/Afbeeldingen/Foto's/albums:/media/D/Afbeeldingen/Foto's/albums:ro
+      # - /media/D/Afbeeldingen/Foto's/albums:/media/D/Afbeeldingen/Foto's/albums:ro
+      - /home/wout/Pictures/albums:/home/wout/Pictures/albums:ro
     env_file:
       - .env
     ports:

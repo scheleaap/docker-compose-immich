@@ -1,5 +1,6 @@
 # Immich
 
+
 ## Hardware setup
 
 Enable wake-on-lan (see dev-notes).
@@ -16,11 +17,12 @@ HandleLidSwitchDocked=ignore
 EOF
 ```
 
+
 ## Installation and configuration
 
-User: _reg e-mail address_, password _N3_.
+User: _reg e-mail address_, password _N3_ + `!`.
 
-1. Configure storage template
+1. Configure storage template to `{{album}}/{{filename}}`
 1. Disable face recognition (under 'Machine Learning Settings' -> 'Facial Recognition')
 1. Enable face import (under 'Metadata Settings')
 1. Mount external libraries as _read-only_ volumes
@@ -74,11 +76,28 @@ User: _reg e-mail address_, password _N3_.
 1. Check if `$takeout_dir/output` and `$takeout_dir/output-tz-adjusted` have the same files (2x find + diff)
 1. Create albums in Immich (see below)
 
-TODO HIER BEZIG:
 
-Old photos:
+## Fixing old photos
+
 1. Find all files w/o EXIF timestamps --> set timestamp from Digikam and/or from file name
 1. Move wedding photos to `$HOME/Pictures/Foto's/albums` after checking/fixing the EXIF timestamps
+
+
+## Syncing from desktop to laptop
+
+This is `-a` minus `--perms --owner --group` plus `--delete -P -v`. We do not sync the permissions, owner and group because we're copying from a Windows to a Linux filesystem.
+
+```sh
+rsync \
+  --recursive \
+  --links \
+  --times \
+  --delete \
+  -D \
+  -P \
+  -v \
+  "/media/D/Afbeeldingen/Foto's/albums" "gorilla:/home/wout/Pictures"
+```
 
 
 ## Creating albums for external libraries
@@ -93,8 +112,6 @@ docker run \
   salvoxia/immich-folder-album-creator:latest \
   /script/immich_auto_album.sh
 ```
-
-/usr/src/app/external
 
 
 ## Importing albums using the CLI
