@@ -3,19 +3,19 @@
 
 ## Hardware setup
 
-Enable wake-on-lan (see dev-notes).
-
-Configure the laptop to not suspend if the lid is closed:
-
-```sh
-sudo mkdir -p /etc/systemd/logind.conf.d
-sudo tee /etc/systemd/logind.conf.d/lid-close-action.conf > /dev/null <<EOF
-[Login]
-HandleLidSwitch=ignore
-HandleLidSwitchExternalPower=ignore
-HandleLidSwitchDocked=ignore
-EOF
-```
+* Enable wake-on-lan (see dev-notes).
+* Configure the laptop to suspend after 1 hour (either on battery or on AC)
+* Configure the laptop to not suspend if the lid is closed:
+  ```sh
+  sudo mkdir -p /etc/systemd/logind.conf.d
+  sudo tee /etc/systemd/logind.conf.d/lid-close-action.conf > /dev/null <<EOF
+  [Login]
+  HandleLidSwitch=ignore
+  HandleLidSwitchExternalPower=ignore
+  HandleLidSwitchDocked=ignore
+  EOF
+  ```
+* Configure port forwarding in the router.
 
 
 ## Installation and configuration
@@ -104,14 +104,16 @@ rsync \
 
 https://github.com/Salvoxia/immich-folder-album-creator
 
-```sh
-docker run \
-  -e API_URL="http://scheleaapub.fritz.box:2283/api/" \
-  -e API_KEY="wOHY7ReXTt6nMHYd9qqkLbsmGpRwx7WNZuFgdvIL9Jc" \
-  -e ROOT_PATH="/media/D/Afbeeldingen/Foto's/albums" \
-  salvoxia/immich-folder-album-creator:latest \
-  /script/immich_auto_album.sh
-```
+1. [Create an API key](https://github.com/Salvoxia/immich-folder-album-creator/blob/main/README.md#creating-an-api-key) and store it in `folder-album-creator.secret.env`
+2. On the laptop, run:
+    ```sh
+    sudo docker run \
+      --env-file folder-album-creator.env \
+      --env-file folder-album-creator.secret.env \
+      salvoxia/immich-folder-album-creator:latest \
+      /script/immich_auto_album.sh
+    ```
+3. Follow the instructions shown on the screen
 
 
 ## Importing albums using the CLI
